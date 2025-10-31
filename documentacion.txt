@@ -1,0 +1,126 @@
+APLICACIÓN REGISTRO Y FACTURACCIÓN RESTAURANTES
+
+----------------------------------------------------------------------------------------
+
+OBJETIVO PRINCIPAL
+Aplicación para cajeros en un restaurante para registro de productos, meseros y mesas. Proceso de facturación con fácil movilidad en la apertura de cuentas, registro de facturas por día.
+
+----------------------------------------------------------------------------------------
+
+OBJETIVOS
+1)Registro de productos (tiene una categoría, nombre, descripción y un precio).
+ 1.1 no pueden haber productos repetidos.
+ 1.2 las categorías son importantes(plato principal, entrada, bebida, postre, adiciones)
+	
+2)Registro de mesero (id, nombre) datos personales del empleado.  
+ 2.2 no pueden haber empleados repetidos.
+
+3)Registro de mesas mesas(cantidad de mesas según restaurante cada una con su propio id) 
+
+4)apertura de factura
+ 4.1 se aclara que la factura se hace solo con productos, meseros, mesas ya registradas para agilizar todo y evitar repetición.
+ 4.2 se ingresa mesa (solo puede manejar una única factura activa)
+ 4.3 se ingresa mesero (puede manejar varias mesas)
+ 4.4 se seleccionan productos (en la interfaz primero se selecciona la categoría y después el          producto)
+ 4.5 se guarda la factura en estado abierto (se pueden seguir abriendo facturas en las mesas disponibles)
+ 4.6 se declara la mesa como abierta(no disponible)
+ 
+5)cierre de factura
+ 5.1 se ingresa a menú con las mesas abiertas
+ 5.2 se genera una factura con el numero de la mesa, el valor a pagar, la fecha, el nombre del mesero, y la fecha. 
+ 5.3 se cierra la mesa(disponible)
+
+6)historial de facturas por día
+ 6.1 se muestran las facturas realizadas en el día(las facturas cerradas no se pueden modificar)
+ 6.2 conteo de ganancias por día 
+
+----------------------------------------------------------------------------------------
+
+/Flujo principal 
+
+A[Inicio] --> B[Seleccionar Mesa Existente]
+B --> C{¿Mesa disponible?}
+C -- No --> B
+C -- Sí --> D[Seleccionar Mesero Existente]
+D --> E[Seleccionar Productos desde Catálogo]
+E --> F[Guardar Factura (Abierta)]
+F --> G[Marcar Mesa como Ocupada]
+G --> H{¿Desea crear otra factura?}
+H -- Sí --> B
+H -- No --> I[Revisar Mesas Abiertas]
+I --> J[Seleccionar Mesa a Cerrar]
+J --> K[Generar Factura Final]
+K --> L[Mostrar Factura en Pantalla o Impresión]
+L --> M[Marcar Factura como Cerrada]
+M --> N[Liberar mesa]
+N --> O[Volver a Mesas Abiertas]
+O --> Q
+Q --> R[Consultar Historial del Día]
+R --> S[Mostrar Ventas y Facturas del Día]
+S --> T[Fin]
+
+/FLUJO REGISTRO
+
+A[Inicio] --> B[Seleccionar Tipo de Registro]
+B --> C[Registrar Mesero]
+B --> D[Registrar Mesa]
+B --> E[Registrar Producto]
+
+C --> F{¿Mesero ya existe?}
+D --> G{¿Mesa ya existe?}
+E --> H{¿Producto ya existe?}
+
+F -- Sí --> B
+G -- Sí --> B
+H -- Sí --> B
+
+F -- No --> I[Guardar Nuevo Mesero]
+G -- No --> J[Guardar Nueva Mesa]
+H -- No --> K[Guardar Nuevo Producto]
+
+I --> L[Confirmar Registro]
+J --> L
+K --> L
+L --> B
+
+----------------------------------------------------------------------------------------
+
+FLUJO DE TRABAJO  
+1.Creación del entorno virtual y proyecto base Django.
+
+2.Creación de las apps (inventario, personal, mesas, facturacion, core).
+
+3.Configuración inicial del proyecto (INSTALLED_APPS, templates, static, etc.).
+
+4.Modelos y relaciones entre las tablas.
+
+5.Migraciones y pruebas en admin.
+
+6.Creación de vistas, rutas dinámicas y templates.
+
+7.Formularios (registro de productos, meseros, mesas, facturas).
+
+8.Lógica de apertura/cierre de facturas y estado de mesas.
+
+9.Historial diario y reportes.
+
+10.Manejo de errores (404, validaciones).
+
+----------------------------------------------------------------------------------------
+
+Estructura 
+restaurante/
+│
+├── manage.py
+├── restaurante/               ← Configuración global del proyecto
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+│
+├── core/                      ← Página principal y plantillas base
+├── inventario/                ← Productos y categorías
+├── personal/                  ← Meseros
+├── mesas/                     ← Mesas
+└── facturacion/               ← Facturas, detalles y lógica de ventas
