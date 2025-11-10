@@ -1,7 +1,9 @@
 from django.shortcuts import render
-
+from .models import Producto
 # Create your views here.
-from django.http import HttpResponse
 
-def index(request):
-    return HttpResponse("Bienvenido al sistema de registro y facturación del restaurante.")
+def lista_productos(request):
+    productos= Producto.objects.select_related('categoria').all()
+    return render(request,'inventario/lista_productos.html', {'productos': productos})
+
+    

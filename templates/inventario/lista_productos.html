@@ -1,0 +1,22 @@
+<h1>LISTA DE PRODUCTOS</h1>
+
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>Nombre</th>
+        <th>Categoria</th>
+        <th>Precio</th>        
+    </tr>
+    {% for producto in productos %}
+    <tr>
+        <td>{{producto.Id}}</td>
+        <td>{{producto.Nombre}}</td>
+        <td>{{producto.Categoria}}</td>
+        <td>{{producto.Precio}}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">No hay productos registardos</td></tr>
+    {% endfor %}
+</table>
+
+<a href="/">Volver al menú</a>

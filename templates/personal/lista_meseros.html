@@ -1,0 +1,26 @@
+<h1>LISTA DE MESEROS</h1>
+
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>Nombre</th>
+        <th>Telefono</th>
+        <th>Email</th>
+    </tr>
+
+    {% for mesero in meseros %}
+
+    <tr>
+        <td>{{mesero.Id}}</td>
+        <td>{{mesero.Nombre}}</td>
+        <td>{{mesero.Telefono}}</td>
+        <td>{{mesero.Email}}</td>
+    </tr>
+
+    {% empty %}
+    <tr><td colspan="4">No hay meseros en el registro</td></tr>
+
+    {% endfor %}
+</table>
+
+<a href="/">Volver al menú</a>

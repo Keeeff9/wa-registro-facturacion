@@ -1,7 +1,7 @@
 from django.shortcuts import render
-
+from .models import Mesa
 # Create your views here.
-from django.http import HttpResponse
 
-def index(request):
-    return HttpResponse("Bienvenido al sistema de registro y facturación del restaurante.")
+def lista_mesas(request):
+    mesas = Mesa.objects.all()
+    return render(request, 'mesas/lista_mesas.html', {'mesas': mesas})
