@@ -3,18 +3,14 @@
 <table border="1">
     <tr>
         <th>Id</th>
-        <th>Nombre</th>
-        <th>Telefono</th>
-        <th>Email</th>
+        <th>Nombre</th>      
     </tr>
 
     {% for mesero in meseros %}
 
     <tr>
-        <td>{{mesero.Id}}</td>
-        <td>{{mesero.nombre}}</td>
-        <td>{{mesero.telefono}}</td>
-        <td>{{mesero.email}}</td>
+        <td>{{mesero.codigo}}</td>
+        <td>{{mesero.nombre}}</td>  
     </tr>
 
     {% empty %}
@@ -23,4 +19,5 @@
     {% endfor %}
 </table>
 
+<a href="/personal">Atras</a><br><br>
 <a href="/">Volver al menú</a>

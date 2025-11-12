@@ -3,6 +3,9 @@ from .models import Mesa
 from .forms import MesaForm
 # Create your views here.
 
+def opciones_mesas(request):
+    return render(request,'mesas/opciones_mesas.html')
+ 
 def lista_mesas(request):
     mesas = Mesa.objects.all()
     return render(request, 'mesas/lista_mesas.html', {'mesas': mesas})

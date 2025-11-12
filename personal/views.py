@@ -3,6 +3,9 @@ from .models import Mesero
 from .forms import MeseroForm
 # Create your views here.
 
+def opciones(request):
+    return render(request,'personal/opciones.html')
+
 def lista_meseros(request):
     meseros = Mesero.objects.all()
     return render(request, 'personal/lista_meseros.html', {'meseros':meseros})

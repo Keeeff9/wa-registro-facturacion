@@ -4,10 +4,10 @@ from .models import Mesero
 class MeseroForm(forms.ModelForm):
     class Meta:
         model = Mesero
-        fields = ['nombre', 'telefono', 'email']
+        fields = ['codigo','nombre']
 
-    def clean_nombre(self):
-        nombre = self.cleaned_data['nombre']
-        if Mesero.objects.filter(nombre__iexact=nombre).exists():
-            raise forms.ValidationError("Ya existe un mesero con ese nombre")
-        return nombre
+    def clean_codigo(self):
+        codigo = self.cleaned_data['codigo']
+        if Mesero.objects.filter(codigo__iexact=codigo).exists():
+            raise forms.ValidationError("Codigo no disponible")
+        return codigo
