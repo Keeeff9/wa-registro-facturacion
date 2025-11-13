@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Factura #{{ factura.id }} — Mesa {{ factura.mesa.numero }}</h2>
+  <p><strong>Mesero:</strong> {{ factura.mesero.codigo }} - {{ factura.mesero.nombre }}</p>
+
+  <hr>
+
+  <h4>Agregar productos</h4>
+  <form method="POST" class="card p-3 mb-3">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Agregar producto</button>
+  </form>
+
+  <h4>Detalles actuales</h4>
+  {% if detalles %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Precio Unitario</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in detalles %}
+        <tr>
+          <td>{{ item.producto.nombre }}</td>
+          <td>{{ item.cantidad }}</td>
+          <td>${{ item.producto.precio }}</td>
+          <td>${{ item.subtotal }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <h5 class="text-end"><strong>Total:</strong> ${{ total }}</h5>
+  {% else %}
+    <p>No se han agregado productos todavía.</p>
+  {% endif %}
+
+  <div class="mt-4">
+    <a href="{% url 'cerrar_factura' factura.id %}" class="btn btn-danger">Cerrar factura</a>
+    <a href="{% url 'abrir_factura' %}" class="btn btn-secondary">Abrir nueva factura</a>
+    <a href="{% url 'opciones' %}" class="btn btn-outline-secondary">Volver al menú</a>
+  </div>
+</div>
+{% endblock %}

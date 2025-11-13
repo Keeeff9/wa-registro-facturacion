@@ -1,0 +1,29 @@
+<!-- facturacion/facturas_abiertas.html -->
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Facturas Abiertas</h2>
+  
+  {% if facturas %}
+    <div class="list-group">
+      {% for factura in facturas %}
+        <div class="list-group-item">
+          <h5>Factura #{{ factura.id }} - Mesa {{ factura.mesa.numero }}</h5>
+          <p>Mesero: {{ factura.mesero.nombre }} | Fecha: {{ factura.fecha|date:"d/m/Y H:i" }}</p>
+          <div>
+            <a href="{% url 'agregar_productos' factura.id %}" class="btn btn-sm btn-success">
+              Agregar Productos
+            </a>
+            <a href="{% url 'cerrar_factura' factura.id %}" class="btn btn-sm btn-danger">
+              Cerrar Factura
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No hay facturas abiertas.</p>
+    <a href="{% url 'abrir_factura' %}" class="btn btn-primary">Abrir Nueva Factura</a>
+  {% endif %}
+</div>
+{% endblock %}
