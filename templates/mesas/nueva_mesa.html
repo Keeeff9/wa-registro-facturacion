@@ -1,3 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Opciones{% endblock %}
+
+{% block content %}
+
 <h1>Registrar nueva mesa</h1>
 
 <form method="post">
@@ -9,3 +16,5 @@
 <a href="{% url 'lista_mesas' %}">Lista de mesas</a><br><br>
 <a href="{% url 'opciones_mesas' %}">Atras</a><br><br>
 <a href="/">Volver al inicio</a>
+
+{% endblock %}
