@@ -1,49 +1,49 @@
-{% extends 'base.html' %}
-{% block content %}
-<div class="container mt-4">
-  <h2>Factura #{{ factura.id }} — Mesa {{ factura.mesa.numero }}</h2>
-  <p><strong>Mesero:</strong> {{ factura.mesero.codigo }} - {{ factura.mesero.nombre }}</p>
+<h2>Agregar productos a la factura {{ factura.id }}</h2>
 
-  <hr>
-
-  <h4>Agregar productos</h4>
-  <form method="POST" class="card p-3 mb-3">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Agregar producto</button>
-  </form>
-
-  <h4>Detalles actuales</h4>
-  {% if detalles %}
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Producto</th>
-          <th>Cantidad</th>
-          <th>Precio Unitario</th>
-          <th>Subtotal</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in detalles %}
-        <tr>
-          <td>{{ item.producto.nombre }}</td>
-          <td>{{ item.cantidad }}</td>
-          <td>${{ item.producto.precio }}</td>
-          <td>${{ item.subtotal }}</td>
-        </tr>
+<form method="get">
+    <label>Categoría</label>
+    <select name="categoria" onchange="this.form.submit()">
+        <option value="">Seleccione una categoría</option>
+        {% for c in categorias %}
+            <option value="{{ c.id }}" {% if c.id|stringformat:"s" == categoria_id %}selected{% endif %}>
+                {{ c.nombre }}
+            </option>
         {% endfor %}
-      </tbody>
-    </table>
-    <h5 class="text-end"><strong>Total:</strong> ${{ total }}</h5>
-  {% else %}
-    <p>No se han agregado productos todavía.</p>
-  {% endif %}
+    </select>
+</form>
 
-  <div class="mt-4">
-    <a href="{% url 'cerrar_factura' factura.id %}" class="btn btn-danger">Cerrar factura</a>
-    <a href="{% url 'abrir_factura' %}" class="btn btn-secondary">Abrir nueva factura</a>
-    <a href="{% url 'opciones' %}" class="btn btn-outline-secondary">Volver al menú</a>
-  </div>
-</div>
-{% endblock %}
+<br>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label>Producto</label>
+    <select name="producto" required>
+        <option value="">Seleccione un producto</option>
+
+        {% for producto in productos %}
+            <option value="{{ producto.id }}">{{ producto.nombre }} — ${{ producto.precio }}</option>
+        {% endfor %}
+    </select>
+
+    <br><br>
+
+    <label>Cantidad</label>
+    <input type="number" name="cantidad" min="1" value="1">
+
+    <br><br>
+
+    <button type="submit">Agregar producto</button>
+</form>
+
+<hr>
+
+<h3>Detalle actual</h3>
+
+<ul>
+    {% for d in detalles %}
+        <li>{{ d.producto.nombre }} x {{ d.cantidad }} — ${{ d.subtotal }}</li>
+    {% endfor %}
+</ul>
+
+<p><strong>Total:</strong> ${{ factura.total }}</p>

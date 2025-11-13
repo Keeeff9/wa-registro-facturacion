@@ -15,6 +15,7 @@ class FacturaForm(forms.ModelForm):
         self.fields['mesero'].queryset = Mesero.objects.all()
 
 class DetalleFacturaForm(forms.ModelForm):
+
     categoria = forms.ModelChoiceField(
         queryset=Categoria.objects.all(),
         required=True,
@@ -27,14 +28,17 @@ class DetalleFacturaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
         self.fields['producto'].queryset = Producto.objects.none()
 
-        if 'categoria' in self.data:  
+        if 'categoria' in self.data:
             try:
                 categoria_id = int(self.data.get('categoria'))
                 self.fields['producto'].queryset = Producto.objects.filter(categoria_id=categoria_id)
             except (ValueError, TypeError):
                 pass
-        elif self.instance.pk:
-            self.fields['producto'].queryset = self.instance.categoria.products.all()
 
+        elif self.instance.pk:
+            categoria = self.instance.producto.categoria
+            self.fields['categoria'].initial = categoria
+            self.fields['producto'].queryset = Producto.objects.filter(categoria=categoria)

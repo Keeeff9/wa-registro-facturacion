@@ -5,6 +5,8 @@ from django.db.models import Sum, F
 from .models import Factura, DetalleFactura
 from .forms import FacturaForm, DetalleFacturaForm
 from mesas.models import Mesa
+from inventario.models import Producto,Categoria
+
 
 def opciones(request):
     return render(request, 'facturacion/opciones.html')
@@ -26,36 +28,32 @@ def abrir_factura(request):
 
 
 def agregar_productos(request, factura_id):
-    try:
-        factura = get_object_or_404(Factura, id=factura_id, estado='abierta')
+    factura = get_object_or_404(Factura, id=factura_id)
+    categorias = Categoria.objects.all()
 
-        if request.method == 'POST':
-            form = DetalleFacturaForm(request.POST)
-            if form.is_valid():
-                detalle = form.save(commit=False)
-                detalle.factura = factura
-                detalle.save()
-                messages.success(request, 'Producto agregado exitosamente.')
-                return redirect('agregar_productos', factura_id=factura.id)
-            else:
-                # Debug: ver errores del formulario
-                print("Errores del formulario:", form.errors)
-        else:
-            form = DetalleFacturaForm()
+    categoria_id = request.GET.get("categoria")  
 
-        detalles = factura.detalles.all()
-        total = factura.total()
+    productos = Producto.objects.filter(categoria_id=categoria_id) if categoria_id else Producto.objects.none()
 
-        return render(request, 'facturacion/agregar_productos.html', {
-            'factura': factura,
-            'form': form,
-            'detalles': detalles,
-            'total': total
-        })
-    except Exception as e:
-        print(f"Error completo: {str(e)}")  # Para debug
-        messages.error(request, f'Error al agregar productos: {str(e)}')
-        return redirect('opciones')
+    if request.method == "POST":
+        form = DetalleFacturaForm(request.POST)
+        if form.is_valid():
+            detalle = form.save(commit=False)
+            detalle.factura = factura
+            detalle.save()
+            return redirect("facturacion:agregar_productos", factura_id=factura.id)
+    else:
+        form = DetalleFacturaForm()
+
+    return render(request, "facturacion/agregar_productos.html", {
+        "factura": factura,
+        "categorias": categorias,
+        "productos": productos,
+        "categoria_id": categoria_id,
+        "form": form,
+        "detalles": factura.detalles.all(),
+    })
+
 
 
 def cerrar_factura(request, factura_id):
