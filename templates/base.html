@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}WA-RESTAURANTE{% endblock %}</title>
+        
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>        
+        <h1>facturacion y registro</h1>
+        <nav>            
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>        
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

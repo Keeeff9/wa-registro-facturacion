@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Opciones{% endblock %}
+
+{% block content %}
+
+<h1>Opciones</h1>
+
+<a href="{% url 'lista_mesas' %}">Listado de mesas</a><br><br>
+<a href="{% url 'nueva_mesa' %}">Agregar una mesa</a><br><br>
+
+<a href="/">Volver</a>
+
+{% endblock %}

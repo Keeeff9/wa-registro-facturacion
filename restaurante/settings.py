@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,8 +24,13 @@ SECRET_KEY = 'django-insecure-(2h39tvnr=1s7k*s2e7=y32d+a388pz_^xd^+fr*ws1d*^8p+4
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+TIME_ZONE = 'America/Bogota'
+LANGUAGE_CODE = 'es-co'
 ALLOWED_HOSTS = []
+
+DATE_FORMAT = 'd/m/Y'
+TIME_FORMAT = 'H:i'
+DATETIME_FORMAT = 'd/m/Y H:i'
 
 
 # Application definition
@@ -39,10 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'core',
-    'facturacion',
     'inventario',
+    'personal',
     'mesas',
-    'personal'
+    'facturacion',
     
 ]
 
@@ -61,10 +66,11 @@ ROOT_URLCONF = 'restaurante.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -72,6 +78,14 @@ TEMPLATES = [
         },
     },
 ]
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 WSGI_APPLICATION = 'restaurante.wsgi.application'
 

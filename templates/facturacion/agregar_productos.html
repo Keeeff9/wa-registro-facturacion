@@ -1,0 +1,49 @@
+<h2>Agregar productos a la factura {{ factura.id }}</h2>
+
+<form method="get">
+    <label>Categoría</label>
+    <select name="categoria" onchange="this.form.submit()">
+        <option value="">Seleccione una categoría</option>
+        {% for c in categorias %}
+            <option value="{{ c.id }}" {% if c.id|stringformat:"s" == categoria_id %}selected{% endif %}>
+                {{ c.nombre }}
+            </option>
+        {% endfor %}
+    </select>
+</form>
+
+<br>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label>Producto</label>
+    <select name="producto" required>
+        <option value="">Seleccione un producto</option>
+
+        {% for producto in productos %}
+            <option value="{{ producto.id }}">{{ producto.nombre }} — ${{ producto.precio }}</option>
+        {% endfor %}
+    </select>
+
+    <br><br>
+
+    <label>Cantidad</label>
+    <input type="number" name="cantidad" min="1" value="1">
+
+    <br><br>
+
+    <button type="submit">Agregar producto</button>
+</form>
+
+<hr>
+
+<h3>Detalle actual</h3>
+
+<ul>
+    {% for d in detalles %}
+        <li>{{ d.producto.nombre }} x {{ d.cantidad }} — ${{ d.subtotal }}</li>
+    {% endfor %}
+</ul>
+
+<p><strong>Total:</strong> ${{ factura.total }}</p>

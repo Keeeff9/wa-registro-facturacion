@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Opciones{% endblock %}
+
+{% block content %}
+
+  <h1 class="mb-4">Sistema de Facturación</h1>
+
+          <a href="{% url 'abrir_factura' %}"> Abrir Nueva Factura - </a><br><br>
+          <a href="{% url 'historial' %}">Ver Historial</a><br><br>
+          <a href="{% url 'facturas_abiertas' %}">Gestionar Facturas Abiertas</a><br><br>
+    
+  <div class="mt-4">
+    <p class="text-muted">
+      <small>
+        S
+      </small>
+    </p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Opciones{% endblock %}
+
+{% block content %}
+
+<h1>Listado de mesas</h1>
+
+<table border="1">
+    <tr>    
+        <th>Id</th>
+        <th>Estado</th>
+    </tr>
+
+    {% for mesa in mesas %}
+    <tr>
+        <td>{{mesa.numero}}</td>
+        <td>{{mesa.disponible}}</td>
+    </tr>
+
+    {% empty %}
+    <tr><td colspan="4">No hay mesas en el registro</td></tr>
+    {% endfor %}
+
+</table>
+
+<a href="{% url 'opciones_mesas' %}">Atras</a><br><br>
+<a href="/">Volver al inicio</a>
+
+{% endblock %}

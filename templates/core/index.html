@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Opciones{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PANEL PRINCIPAL</title>
+</head>
+
+<body>
+    <h1>Bienvenido al sistema de registro y facturación</h1>
+
+    <ul>
+        <li><a href="/inventario/">Gestión de productos</a></li>
+        <li><a href="/personal/">Gestión de personal</a></li>
+        <li><a href="/mesas/">Gestión de mesas</a></li>
+        <li><a href="/facturacion/">Gestión de facturación</a></li>        
+    </ul>
+
+</body>
+
+</html>
+
+{% endblock %}

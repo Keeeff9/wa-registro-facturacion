@@ -1,31 +1,71 @@
 from django.db import models
-from django.utils import timezone
-from inventario.models import Producto
-from mesas.models import Mesa
 from personal.models import Mesero
+from mesas.models import Mesa
+from inventario.models import Producto
+from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 
 class Factura(models.Model):
-    mesa= models.OneToOneField(Mesa, on_delete=models.PROTECT)
-    mesero= models.ForeignKey(Mesero, on_delete=models.PROTECT, related_name="facturas")
-    fecha_apertura = models.DateTimeField(default=timezone.now)
-    fecha_cierre = models.DateTimeField(blank=True,null=True)
-    cerrada = models.BooleanField(default=False)
+    ESTADO_CHOISES = [
+        ('abierta', 'Abierta'),
+        ('cerrada', 'Cerrada'),
+    ]
+
+    mesa = models.ForeignKey(Mesa, on_delete=models.PROTECT)
+    mesero = models.ForeignKey(Mesero, on_delete=models.PROTECT)
+    fecha = models.DateTimeField(default=timezone.now)
+    estado = models.CharField(max_length=10, choices=ESTADO_CHOISES, default='abierta')
 
     def total(self):
-        return sum(detalle.subtotal() for detalle in self.delete.all())
+        return sum(item.subtotal() for item in self.detalles.all())
     
     def __str__(self):
-        return f"Factura {self.id} - Mesa {self.mesa.numero} ({'Cerrada' if self.cerrada else 'Abierta'})"
+        return f"Factura #{self.id} - Mesa {self.mesa.numero} ({self.estado})"
     
-class Detalle(models.Model):
+    def clean(self):
+        if self.estado == 'abierta':            
+            factura_abierta = Factura.objects.filter(
+                mesa=self.mesa, 
+                estado='abierta'
+            ).exclude(pk=self.pk).exists()
+            
+            if factura_abierta:
+                raise ValidationError("Ya existe una factura abierta en esta mesa")
+    
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+
+        facturas_abiertas_en_mesa = Factura.objects.filter(
+            mesa=self.mesa, 
+            estado='abierta'
+        ).exists()
+                
+        if facturas_abiertas_en_mesa and self.mesa.disponible:
+            self.mesa.disponible = False
+            self.mesa.save()
+
+        elif not facturas_abiertas_en_mesa and not self.mesa.disponible:
+            self.mesa.disponible = True
+            self.mesa.save()
+
+class DetalleFactura(models.Model):
     factura = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='detalles')
-    Producto = models.ForeignKey(Producto,on_delete=models.PROTECT)
+    producto = models.ForeignKey(Producto, on_delete=models.PROTECT)
     cantidad = models.PositiveIntegerField(default=1)
 
     def subtotal(self):
-        return self.Producto.precio * self.cantidad
-    
+        return self.producto.precio * self.cantidad
+        
     def __str__(self):
-        return f"{self.cantidad} x {self.Producto.nombre}"
+        return f"{self.producto.nombre} x{self.cantidad}"  
+    
+    def clean(self):        
+        if self.factura_id and self.factura.estado == 'cerrada':
+            raise ValidationError("No se pueden modificar detalles de una factura cerrada")
+    
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
